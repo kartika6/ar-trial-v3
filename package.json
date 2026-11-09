@@ -1,0 +1,20 @@
+{
+  "name": "couch-live-ar-v3",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/prepare-engine.mjs",
+    "dev": "vite --host 127.0.0.1",
+    "build": "node scripts/prepare-engine.mjs && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@8thwall/engine-binary": "1.0.0",
+    "three": "0.183.2"
+  },
+  "devDependencies": {
+    "vite": "8.3.7"
+  }
+}

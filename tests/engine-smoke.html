@@ -1,0 +1,7 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>AR engine verification</title></head><body><h1 id="result">Loading self-hosted engine…</h1><p id="detail"></p><script type="module">
+import {loadEngine} from '../src/ar-session.js';
+// This page only verifies static engine loading. It never opens a camera.
+const originalBase = document.createElement('base'); originalBase.href = location.origin + '/'; document.head.prepend(originalBase);
+try { const xr = await loadEngine(); await xr.loadChunk('slam'); document.querySelector('#result').textContent = 'Engine and world-tracking files loaded'; document.querySelector('#detail').textContent = ['Three.js integration: '+Boolean(xr.Threejs), 'World tracking: '+Boolean(xr.XrController), 'Camera API: '+Boolean(navigator.mediaDevices?.getUserMedia)].join(' · '); }
+catch(error) { document.querySelector('#result').textContent = 'Engine load failed'; document.querySelector('#detail').textContent = error.message; }
+</script></body></html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#17191b">
+  <meta name="description" content="Place your couch in your room and compare colors live in the camera view.">
+  <title>Couch AR — Live Colors</title>
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+  <main id="app" data-stage="preview">
+    <div id="preview-scene"><canvas id="preview-canvas" aria-label="Interactive 3D preview of your couch"></canvas></div>
+    <canvas id="camera-canvas" aria-label="Live camera with your couch placed in your room" hidden></canvas>
+
+    <header class="app-header">
+      <div class="title-group"><span class="app-title">View in your room</span><span id="mode-label">3D preview</span></div>
+      <div class="header-actions">
+        <a class="icon-button" href="./about.html" target="_blank" rel="noopener" aria-label="About this prototype"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></svg></a>
+        <button class="icon-button" id="close-camera" aria-label="Close camera" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+      </div>
+    </header>
+
+    <p class="status-bubble" id="tracking-status" role="status" aria-live="polite" hidden></p>
+    <div class="scan-guide" id="scan-guide" aria-hidden="true" hidden><span></span><span></span><span></span><span></span></div>
+    <p class="scene-hint" id="preview-hint">Drag to look around</p>
+
+    <section class="welcome-panel" id="welcome-panel" aria-label="Start room preview">
+      <h1>See it in your room.</h1>
+      <p>Place your couch, then compare colors in the camera view.</p>
+      <button class="button primary full" id="start-camera" disabled>Loading couch…</button>
+      <p class="permission-note">Uses your camera and motion sensors.<br>iPhone: Safari · Android: Chrome</p>
+      <button class="text-button" id="preview-colors" disabled>Try colors in 3D</button>
+    </section>
+
+    <section class="bottom-panel placement-panel" id="placement-panel" aria-label="Place couch" hidden>
+      <h2 id="placement-title">Find your floor</h2>
+      <p id="placement-help">Point at the floor and move your phone slowly forward and back.</p>
+      <button class="button primary full" id="place-couch" disabled>Finding the floor…</button>
+      <button class="text-button" id="cancel-move" hidden>Keep current position</button>
+    </section>
+
+    <section class="bottom-panel couch-controls" id="couch-controls" aria-label="Couch controls" hidden>
+      <div class="product-row">
+        <div><h2>Your couch</h2><p id="selected-color">Original brown</p></div>
+        <button class="button primary color-trigger" id="open-colors" aria-expanded="false" aria-controls="color-palette"><span id="selected-dot"></span>Color<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 14 6-6 6 6"/></svg></button>
+      </div>
+      <div class="action-row">
+        <button class="action-button" id="move-couch">Move</button>
+        <div class="rotate-actions"><button class="action-button" id="rotate-left" aria-label="Rotate couch left 15 degrees"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg></button><span>Rotate</span><button class="action-button" id="rotate-right" aria-label="Rotate couch right 15 degrees"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M21 10a9 9 0 1 0-2 8M21 4v6h-6"/></svg></button></div>
+        <button class="action-button" id="show-size" aria-expanded="false" aria-controls="size-details">Size</button>
+      </div>
+      <p id="size-details" class="size-details" hidden>Prototype size: <strong>84 × 38 × 34 in</strong><br>Width × depth × height · size is fixed</p>
+    </section>
+
+    <section class="bottom-panel color-palette" id="color-palette" aria-label="Choose couch color" hidden>
+      <div class="palette-header"><div><h2>Color</h2><p id="palette-color">Original brown</p></div><button class="button primary" id="done-colors">Done</button></div>
+      <div class="swatches" role="group" aria-label="Couch colors">
+        <button class="swatch" data-color="original" aria-label="Original brown" aria-pressed="true"><span class="swatch-disc" style="--swatch:#714333"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><span>Original</span></button>
+        <button class="swatch" data-color="red" aria-label="Red" aria-pressed="false"><span class="swatch-disc" style="--swatch:#a62007"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><span>Red</span></button>
+        <button class="swatch" data-color="blue" aria-label="Blue" aria-pressed="false"><span class="swatch-disc" style="--swatch:#074ca6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><span>Blue</span></button>
+      </div>
+    </section>
+
+    <section class="bottom-panel error-panel" id="error-panel" role="alert" hidden><h2 id="error-title">Camera couldn’t start</h2><p id="error-message"></p><button class="button primary full" id="retry-camera">Try again</button><button class="text-button" id="back-preview">Back to 3D preview</button></section>
+    <section class="bottom-panel" id="paused-panel" aria-label="Camera paused" hidden><h2>Camera paused</h2><p>Continue to resume your room preview.</p><button class="button primary full" id="resume-camera">Continue camera</button></section>
+    <p class="sr-only" id="announcement" aria-live="polite"></p>
+    <noscript><div class="no-script">Enable JavaScript to load your couch and use the camera.</div></noscript>
+  </main>
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>

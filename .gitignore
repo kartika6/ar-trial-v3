@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.sites-runtime/
+.DS_Store
+.openai/
+public/vendor/
+public/ENGINE-LICENSE.txt
+public/THREE-LICENSE.txt
